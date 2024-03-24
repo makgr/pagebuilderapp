@@ -16,6 +16,7 @@
     <!-- <script src="https://unpkg.com/grapesjs-plugin-ckeditor@0.0.10"></script> -->
     <script src="{{ asset('grapejs/js/grapesjs-plugin-ckeditor/index.js') }}"></script>
     <script src="https://unpkg.com/grapesjs-preset-newsletter@1.0.1"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 </head>
 <style>
     .nl-link {
@@ -529,7 +530,7 @@
 
 
     </div>
-    <input type="hidden" id="product_id" value="4">
+    <input type="hidden" id="product_id" value="{{ $template_id }}">
 
 
 
@@ -599,7 +600,7 @@
                     </span>
                 </div>
             </div>
-            <input type="hidden" id="template_id" name="template_id" value="4">
+            <input type="hidden" id="template_id" name="template_id" value="{{ $template_id }}">
             <input type="hidden" name="body">
             <button class="gjs-btn-prim gjs-btn-import" style="width: 100%">SEND</button>
         </form>
@@ -618,7 +619,8 @@
         <script async type="text/javascript" src="{{ asset('grapejs/js/carbon-v2.js') }}"></script>
     </div> --}}
 
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://unpkg.com/grapesjs-parser-postcss@1.0.3/dist/index.js"></script>
     <script type="text/javascript">
         var host = 'http://localhost/pagebuilderapp/public/';
@@ -690,7 +692,7 @@
             },
             assetManager: {
                 assets: [
-                    host + 'upload/1705260747.jpg'
+                    host + 'upload/1705777274.png'
                     // host + 'img/grapesjs-logo.png',
                     // host + 'img/tmp-blocks.jpg',
                     // host + 'img/tmp-tgl-images.jpg',
@@ -752,6 +754,7 @@
                         .catch(error => {
                             // Handle upload failure
                             console.log('Opps.Upload failed.');
+                            displayErrorMessage('Opps.Upload failed.');
                         });
                 },
 
@@ -801,7 +804,6 @@
         // Add save command
         cmdm.add('save-design', {
             run: function(editor, sender) {
-                alert('Save button clicked!');
 
                 const html = editor.getHtml();
                 const css = editor.getCss();
@@ -858,6 +860,7 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log('Design saved successfully', data);
+                    displayMessage('Design saved successfully.');
                 })
                 .catch(error => console.error('Error saving design:', error));
         }
@@ -906,6 +909,7 @@
                 setTimeout(function() {
                     localStorage.clear()
                 }, 0)
+                displayMessage('Design removed successfully.');
             }
         });
 
@@ -953,8 +957,10 @@
                             editor.setComponents(data.design.html);
                             editor.setStyle(data.design.css);
                             console.log('Design loaded successfully');
+                            displayMessage("Design loaded successfully.");
                         } else {
                             console.log('No design found for the product');
+                            displayErrorMessage('No design found for the template.');
                         }
                     })
                     .catch(error => console.error('Error loading design:', error));
@@ -980,12 +986,22 @@
                 .then(data => {
                     // Handle the response data
                     console.log(data.message);
+                    displayMessage(data.message);
                 })
                 .catch(error => {
                     // Handle errors
                     console.error('Error:', error);
+                    displayErrorMessage('Error: ' + error);
                 });
         });
+
+        function displayMessage(message) {
+            toastr.success(message, 'Event');
+        }
+
+        function displayErrorMessage(message) {
+            toastr.error(message, 'Event');
+        }
     </script>
 
 </body>

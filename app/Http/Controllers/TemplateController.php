@@ -9,6 +9,31 @@ use Illuminate\Support\Facades\Log;
 
 class TemplateController extends Controller
 {
+
+    public function templateList()
+    {
+        $templates = DB::table('templates')->get();
+        return view('template_list', compact('templates'));
+    }
+    public function buildTemplate($id)
+    {
+        $template_id = $id;
+        return view('build', compact('template_id'));
+    }
+    public function addTemplate()
+    {
+        return view('add_template');
+    }
+    public function saveTemplate(Request $request)
+    {
+        $name = $request->name;
+        DB::table('templates')->insert([
+            'name' => $name
+        ]);
+
+        return redirect('/')->with('msg-success', 'Template created successfully.');
+    }
+
     public function saveDesign(Request $request)
     {
         $productId = $request->input('product_id');
@@ -58,7 +83,7 @@ class TemplateController extends Controller
             Mail::send('emails.mail', $details, function ($message) use ($details) {
                 $message->to($details["to"])
                     ->from('info@r3marketing.com', 'R3 Marketing')
-                    ->cc(['enayet@nochallenge.net', 'zahid@nochallenge.net'])
+                    // ->cc(['enayet@nochallenge.net', 'zahid@nochallenge.net'])
                     ->subject($details["subject"]);
             });
 

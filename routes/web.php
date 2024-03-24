@@ -15,16 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('/', [TemplateController::class, 'templateList']);
+Route::get('/build/{id}', [TemplateController::class, 'buildTemplate']);
+Route::get('/add-template', [TemplateController::class, 'addTemplate']);
+Route::post('/save-template', [TemplateController::class, 'saveTemplate']);
 
-Route::get('/build', function () {
-    return view('build');
-});
-Route::get('/build2', function () {
-    return view('build2');
-});
+// Route::get('/build', function () {
+//     return view('build');
+// });
+// Route::get('/build2', function () {
+//     return view('build2');
+// });
+
 
 Route::post('/uploadasset', [AssetController::class, 'upload'])->name('uploadasset');
 Route::post('/store/save-design', [TemplateController::class, 'saveDesign']);

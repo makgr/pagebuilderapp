@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('design')->nullable();
+            $table->text('css_code')->nullable();
             $table->timestamps();
         });
     }
